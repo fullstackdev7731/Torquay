@@ -1,0 +1,17 @@
+{% extends 'partials/base.html'%}
+{% load static %}
+
+
+{%block content%}
+
+
+    Room number
+    <br>
+    -- <b>{{room}}</b> -- 
+    <br>
+    Floor - {{room.floor.number}}
+    <br>
+    Beds - {{room.beds}}
+    
+
+{%endblock content%}

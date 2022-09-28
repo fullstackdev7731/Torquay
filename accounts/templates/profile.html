@@ -1,0 +1,14 @@
+{% extends 'partials/base.html' %}
+
+
+{% block content %}
+
+    <a href="{%url 'update-profile'%}"> Update profile </a>
+    <br>
+    {{profile.email}}
+    <br>
+    {{profile.address}}
+    <br>
+    <a href="{%url 'reservations'%}"> <b>My reservations</b> </a>
+
+{% endblock content%}

@@ -1,0 +1,17 @@
+{% extends 'partials/base.html'%}
+{% load static %}
+
+
+{%block content%}
+
+
+    {{reservation}}
+
+    {% for room in reservation.rooms.all%}
+        <br>
+        <a href={{room.get_absolute_url}}> {{room}} </a>
+        <br>
+    {%endfor%}
+    
+
+{%endblock content%}

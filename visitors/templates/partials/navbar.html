@@ -1,0 +1,12 @@
+<nav>
+	<a href="#">Home</a>
+	<a href="#">About</a>
+	<a href="{%url 'create_reservation'%}">Reservations</a>
+    <a href="#">Contact us</a>
+    {%if user.is_authenticated %}
+    <a href="{%url 'logout'%}">Logout</a>
+    {%else%}
+    <a href="{%url 'login'%}">Login</a>
+    {%endif%}
+	<div class="animation start-home"></div>
+</nav>

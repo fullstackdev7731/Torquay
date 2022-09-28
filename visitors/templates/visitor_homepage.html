@@ -1,0 +1,29 @@
+{% extends 'partials/base.html'%}
+{% load static %}
+
+
+{%block content%}
+    <h3>PAST RESERVATIONS</h3>
+    
+    {%for reservation, comment_form in past_and_comments%}
+
+        {%if comment_form %}
+            <br>
+            {{reservation}}
+            <br>
+            <form method="post">
+            {%csrf_token%}
+            {{comment_form}}
+
+            <input name="reservations" value="{{reservation.id}}" hidden>
+        {%endif%}
+        <br>
+    {%endfor%}
+    <button type="submit"> Feedback </button>
+    </form>
+    <hr>
+    <h3>FUTURE RESERVATIONS</h3>
+    {{future_reservations.0}}
+    <br>
+
+{%endblock content%}

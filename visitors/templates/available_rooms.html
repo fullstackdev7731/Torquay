@@ -1,0 +1,19 @@
+{% extends 'partials/base.html'%}
+{% load static %}
+
+
+{%block content%}
+
+    
+<form>
+    <select name="room" class="custom-select" multiple>
+        {% for room in rooms%}
+         <option value="{{room.number}}"> {{room}} </option>
+         {% endfor %}
+    </select>
+    <br>
+    <button> Select rooms </button>
+    <br><br><br><br>
+</form>
+
+{%endblock content%}
