@@ -1,0 +1,20 @@
+{% extends 'partials/base.html'%}
+{% load static %}
+
+
+{%block content%}
+    <h3>Current Reservations</h3>
+
+    {%if visitors%}
+        {%for visitor in visitors%}
+            <br>
+                {{visitor}}
+            <br>
+        {%endfor%}
+    {%endif%}
+    <form action="./"> 
+
+        <input type="text" name="search" placeholder="Search">
+        <button type="submit"> Search </button> 
+    </form>
+{%endblock content%}

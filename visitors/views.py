@@ -10,6 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
+from django.core.mail import send_mail
+
 # Create your views here.
 
 def visitor_homepage(request):
@@ -69,6 +71,11 @@ def create_reservation(request):
         for room_number in room_numbers:
             room = Room.objects.get(number = int(room_number))
             reservation.rooms.add(room)
+
+        send_mail(subject='New reservation',
+        message='Reservation creted successfully. See you at ...',
+        from_email='test@test.com',
+        recipient_list=['test2@test.com'])
 
         print(f"{reservation} WAS CREATED!")
 
