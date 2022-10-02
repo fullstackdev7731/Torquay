@@ -1,4 +1,5 @@
 from django import forms
+from accounts.models import Visitor
 from .models import (Reservation, Comment)
 from datetime import date
 
@@ -17,6 +18,16 @@ class ReservationForm(forms.ModelForm):
             'check_in' : forms.SelectDateWidget(),
             'check_out' : forms.SelectDateWidget()
         }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+
+        super(ReservationForm, self).__init__(*args, **kwargs)
+
+        if self.user.is_staff:
+            self.fields['visitor'] = forms.ModelChoiceField(Visitor.objects.all())
+        else:
+            self.visitor = self.user.visitor
 
     room_size = forms.ChoiceField(choices=ROOM_SIZES)
 

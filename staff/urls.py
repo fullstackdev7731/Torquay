@@ -1,7 +1,24 @@
+from time import time
 from django.urls import path
-from .views import Homepage, reservation_search
+from .views import Homepage
 
 urlpatterns = [
     path('homepage/', Homepage.as_view(), name='staff_homepage'),
-    path('search/', reservation_search, name='reservation_search'),
 ]
+
+
+
+
+# Why use:
+# - code quality
+# - reliability
+
+# - less time
+
+# - debugging 
+
+# - system integration
+
+# Why not use:
+# - hackaton
+# - POC - prototype 

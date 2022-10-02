@@ -1,4 +1,6 @@
 from django.shortcuts import render
+
+from accounts.models import Visitor
 from .forms import (CommentForm, ReservationForm)
 from .models import (Reservation, Room, Floor, Comment)
 from datetime import date, datetime
@@ -46,26 +48,25 @@ def visitor_homepage(request):
 
 
 
-
-
-
 @login_required
 def create_reservation(request):
-    context = {'form': ReservationForm(request.POST or None)}
+    form = ReservationForm(request.POST or None, user = request.user)
+    context = {'form': form}
 
     if 'room' in request.GET:
 
         room_numbers = request.GET.getlist('room')
-
-        # request.GET.getlist('room')
         date_in = str_to_date(request, 'date_in')
         date_out = str_to_date(request, 'date_out')
         
         size = int(request.session.get('size'))
-        
+        visitor = request.session.get('visitor')
 
         reservation = Reservation(check_in=date_in, check_out=date_out, active=True)
-        reservation.visitor = request.user.visitor
+
+        if request.user.is_staff:
+            reservation.visitor = Visitor.objects.get(id=visitor)
+
         reservation.save()
 
         for room_number in room_numbers:
@@ -80,11 +81,10 @@ def create_reservation(request):
         print(f"{reservation} WAS CREATED!")
 
     if request.method == 'POST':
-        form_filled = ReservationForm(request.POST)
-        if form_filled.is_valid():
-            date_in = form_filled.cleaned_data['check_in']
-            date_out = form_filled.cleaned_data['check_out']
-            size = form_filled.cleaned_data['room_size']
+        if form.is_valid():
+            date_in = form.cleaned_data['check_in']
+            date_out = form.cleaned_data['check_out']
+            size = form.cleaned_data['room_size']
 
             reservations = Reservation.objects.filter(Q(check_in__lt=date_out) & Q(check_out__gt=date_in))
             rooms_occupied = reservations.values_list('rooms__number', flat=True)
@@ -94,6 +94,9 @@ def create_reservation(request):
                 request.session['date_in'] = date_in.strftime("%Y/%m/%d")
                 request.session['date_out'] = date_out.strftime("%Y/%m/%d")
                 request.session['size'] = str(size)
+
+                if request.user.is_staff:
+                    request.session['visitor'] = form.cleaned_data['visitor'].id
 
                 return render(request, 'available_rooms.html', {'rooms': available_rooms})
 
