@@ -23,13 +23,13 @@ class ReservationForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
 
         super(ReservationForm, self).__init__(*args, **kwargs)
-
+        room_size = forms.ChoiceField(choices=ReservationForm.ROOM_SIZES)
         if self.user.is_staff:
             self.fields['visitor'] = forms.ModelChoiceField(Visitor.objects.all())
         else:
             self.visitor = self.user.visitor
 
-    room_size = forms.ChoiceField(choices=ROOM_SIZES)
+    
 
     def clean(self):
         date_in = self.cleaned_data['check_in']
