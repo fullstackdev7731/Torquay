@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from accounts.models import Visitor
 from .forms import (CommentForm, ReservationForm)
 from .models import (Reservation, Room, Floor, Comment)
@@ -15,7 +14,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 
 # Create your views here.
-
+@login_required
 def visitor_homepage(request):
     user = request.user
     context = {}
@@ -28,24 +27,22 @@ def visitor_homepage(request):
             reservation = Reservation.objects.get(id=int(reservations_id))
             Comment.objects.create(reservation=reservation, text = comment, rating = int(rating))
 
-    if user.is_authenticated:
-        reservations = user.visitor.reservations.all()
-        context['past_reservations'] = reservations.filter(check_out__lt = date.today())
-        context['future_reservations'] = reservations.filter(check_in__gt = date.today()).order_by('check_in')
-        context['current_reservations'] = reservations.filter(Q(check_in__gte = date.today()) & Q(check_out__gt = date.today()))
+    reservations = user.visitor.reservations.all()
+    context['past_reservations'] = reservations.filter(check_out__lt = date.today())
+    context['future_reservations'] = reservations.filter(check_in__gt = date.today()).order_by('check_in')
+    context['current_reservations'] = reservations.filter(Q(check_in__gte = date.today()) & Q(check_out__gt = date.today()))
 
-        if context['past_reservations'].exists():
-            comment_forms = []
-            for reservation in context['past_reservations']:
-                if not hasattr(reservation, 'comment'):
-                    comment_forms.append(CommentForm(initial={'reservation': reservation}))
-                else:
-                    comment_forms.append(None)
-                context['past_and_comments'] = zip(context['past_reservations'], comment_forms)
+    if context['past_reservations'].exists():
+        comment_forms = []
+        for reservation in context['past_reservations']:
+            if not hasattr(reservation, 'comment'):
+                comment_forms.append(CommentForm(initial={'reservation': reservation}))
+            else:
+                comment_forms.append(None)
+            context['past_and_comments'] = zip(context['past_reservations'], comment_forms)
 
 
     return render(request, 'visitor_homepage.html', context)
-
 
 
 @login_required
@@ -63,7 +60,9 @@ def create_reservation(request):
         visitor = request.session.get('visitor')
 
         reservation = Reservation(check_in=date_in, check_out=date_out, active=True)
-
+        print("VISITOR", visitor)
+        reservation.visitor = Visitor.objects.get(id=visitor)
+        
         if request.user.is_staff:
             reservation.visitor = Visitor.objects.get(id=visitor)
 
@@ -97,7 +96,10 @@ def create_reservation(request):
 
                 if request.user.is_staff:
                     request.session['visitor'] = form.cleaned_data['visitor'].id
-
+                else:
+                    request.session['visitor'] = form.visitor.id
+                
+                print("VISITOR1",request.session['visitor'])
                 return render(request, 'available_rooms.html', {'rooms': available_rooms})
 
 

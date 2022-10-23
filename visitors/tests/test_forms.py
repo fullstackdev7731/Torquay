@@ -20,7 +20,7 @@ class ReservationFormTest(TestDataMixin, TestCase):
             'room_size': 5 
         }
 
-        form = ReservationForm(data=invalid_date)
+        form = ReservationForm(data=invalid_date, user=self.user)
         form.is_valid()
         self.assertTrue(form.errors)
     
@@ -32,6 +32,10 @@ class ReservationFormTest(TestDataMixin, TestCase):
             'room_size': 3
         }
 
-        form = ReservationForm(data=valid_data)
+        form = ReservationForm(data=valid_data, user=self.user)
         form.is_valid()
         self.assertFalse(form.errors)
+
+
+
+

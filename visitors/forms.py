@@ -21,9 +21,9 @@ class ReservationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
-
         super(ReservationForm, self).__init__(*args, **kwargs)
-        room_size = forms.ChoiceField(choices=ReservationForm.ROOM_SIZES)
+        self.fields['room_size'] = forms.ChoiceField(choices=ReservationForm.ROOM_SIZES)
+        print(self.user)
         if self.user.is_staff:
             self.fields['visitor'] = forms.ModelChoiceField(Visitor.objects.all())
         else:

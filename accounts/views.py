@@ -38,7 +38,11 @@ def register(request):
 def user_login(request):
 
     if request.user.is_authenticated:
-        return redirect('visitor_homepage')
+        if request.user.is_staff:
+            return redirect('staff_homepage')
+        else:
+            return redirect('visitor_homepage')
+    
     
     if request.method == 'POST':
 
@@ -70,7 +74,7 @@ def user_logout(request):
 @login_required(login_url='login')
 def update_profile(request):
 
-    profile = request.user.customer
+    profile = request.user.visitor
     form = ProfileForm(request.POST or None, instance=profile)
 
     context = {'form': form}

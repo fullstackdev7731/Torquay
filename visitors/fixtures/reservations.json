@@ -1,0 +1,1 @@
+[{"model": "visitors.reservation", "pk": 1, "fields": {"check_in": "2023-01-01", "check_out": "2023-01-06", "active": true, "visitor": 1, "rooms": [100]}}]
