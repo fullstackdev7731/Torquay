@@ -7,7 +7,7 @@ from .views import (register,
 
 urlpatterns = [
     path('register/', register, name='register'),
-    path('login/', user_login, name='login'),
+    path('', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
     path('update-profile/', update_profile, name='update-profile'),
     path('profile/', profile, name='profile'),
