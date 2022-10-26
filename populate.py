@@ -1,5 +1,4 @@
 import os
-from tkinter import N
 import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Torquay.settings')
