@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from flask import redirect
 from accounts.models import Visitor
 from .forms import (CommentForm, ReservationForm)
 from .models import (Reservation, Room, Floor, Comment)
@@ -14,10 +15,25 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 
 # Create your views here.
+
+# @login_required
+# def index(request):
+#     user = request.user
+#     return redirect('visitor_homepage')
+#     # if user.is_staff:
+#     #     return redirect('staff_homepage')
+#     # else:
+#     #     return redirect('visitor_homepage')
+
+
 @login_required
 def visitor_homepage(request):
     user = request.user
     context = {}
+    
+    if user.is_staff:
+        return redirect('staff_homepage')
+    
     if request.method == 'POST':
         reservations_id = request.POST.getlist('reservations')
         comments = request.POST.getlist('text')
