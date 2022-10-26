@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from flask import redirect
 from accounts.models import Visitor
 from .forms import (CommentForm, ReservationForm)
 from .models import (Reservation, Room, Floor, Comment)
