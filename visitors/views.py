@@ -88,11 +88,9 @@ def create_reservation(request):
             reservation.rooms.add(room)
 
         send_mail(subject='New reservation',
-        message='Reservation creted successfully. See you at ...',
-        from_email='test@test.com',
-        recipient_list=['test2@test.com'])
-
-        print(f"{reservation} WAS CREATED!")
+        message=f'Reservation created successfully. See you at {date_in}, Room {room_numbers}',
+        from_email=None,
+        recipient_list=[request.user.email])
 
     if request.method == 'POST':
         if form.is_valid():
